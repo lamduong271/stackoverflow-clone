@@ -5,6 +5,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import { connectDB } from "./config/mongoConfig";
 import userRouter from "./routes/user.router";
+import portRouter from "./routes/post.router";
 
 const app = express();
 app.use(json());
@@ -18,6 +19,7 @@ app.use(function (req, res, next) {
   next();
 });
 app.use("/auth", userRouter);
+app.use("/question", portRouter);
 app.listen(3000, () => {
   console.log("server is listening on port 3000");
 });

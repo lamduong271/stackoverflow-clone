@@ -2,10 +2,11 @@ import express from "express";
 import User from "../models/user";
 import bcrypt from "bcrypt";
 import { sign } from "jsonwebtoken";
+import { Request, Response, NextFunction } from "express";
 
 const router = express.Router();
 
-router.post("/register", async (req, res) => {
+router.post("/register", async (req: Request, res: Response) => {
   try {
     const user = await User.findOne({ email: req.body.email });
     const saltRounds = 10;
@@ -24,7 +25,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-router.post("/login", async (req, res) => {
+router.post("/login", async (req: Request, res: Response) => {
   try {
     const existUser = await User.findOne({ email: req.body.email });
 
