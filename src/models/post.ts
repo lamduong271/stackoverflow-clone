@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
-import answerSchema from "./answer";
-import commentSchema from "./comment";
-import voteSchema from "./vote";
+import Answer from "./answer";
+import Comment from "./comment";
+import Vote from "./vote";
 
 const Post = mongoose.model(
   "Post",
@@ -14,10 +14,10 @@ const Post = mongoose.model(
     title: String,
     textBody: String,
     created: { type: Date, default: Date.now },
-    votes: [voteSchema],
+    votes: [Vote],
     image: String,
-    comments: [commentSchema],
-    answers: [answerSchema],
+    comments: [Comment.schema],
+    answers: [Answer.schema],
   })
 );
 export default Post;

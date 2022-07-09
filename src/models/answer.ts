@@ -1,20 +1,27 @@
 import mongoose from "mongoose";
+import Vote from "./vote";
+import Comment from "./comment";
 const Schema = mongoose.Schema;
 
-const voteSchema = require("./vote");
-const commentSchema = require("./comment");
+const Answer = mongoose.model(
+  "Answer",
+  new Schema({
+    author: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    created: { type: Date, default: Date.now },
+    textBody: { type: String, required: true },
+    score: { type: Number, default: 0 },
+    votes: [Vote],
+    comments: [Comment.schema],
+    post: {
+      type: Schema.Types.ObjectId,
+      ref: "Post",
+      required: true,
+    },
+  })
+);
 
-const answerSchema = new Schema({
-  author: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
-  created: { type: Date, default: Date.now },
-  textBody: { type: String, required: true },
-  score: { type: Number, default: 0 },
-  votes: [voteSchema],
-  comments: [commentSchema],
-});
-
-export default answerSchema;
+export default Answer;

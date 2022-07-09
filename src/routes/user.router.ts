@@ -15,7 +15,7 @@ router.post("/register", async (req: Request, res: Response) => {
     } else {
       const hashedPwd = await bcrypt.hash(req.body.password, saltRounds);
       await User.create({
-        email: req.body.email,
+        ...req.body,
         password: hashedPwd,
       });
       res.send("ok");
