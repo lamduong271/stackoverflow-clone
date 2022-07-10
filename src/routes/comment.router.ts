@@ -12,8 +12,8 @@ router.post(
   verifyToken,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const post = await Post.findOne({ id: req.body.post });
-      const answer = await Answer.findOne({ id: req.body.answer });
+      const post = await Post.findOne({ _id: req.body.post });
+      const answer = await Answer.findOne({ _id: req.body.answer });
       const payloads = {
         ...req.body,
         author: req.user.id,
@@ -42,7 +42,7 @@ router.put(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const comment = await Comment.findOneAndUpdate(
-        { id: req.params.post },
+        { _id: req.params.post },
         { ...req.body }
       );
       res.status(201).json(comment);
@@ -57,7 +57,7 @@ router.delete(
   verifyToken,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await Comment.findOneAndDelete({ id: req.params.post });
+      await Comment.findOneAndDelete({ _id: req.params.post });
       res.status(201).json("deleted");
     } catch (error) {
       next(error);

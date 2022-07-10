@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.get("/:id", async (req, res, next) => {
   try {
-    const answer = await Answer.findOne({ id: req.params.id });
+    const answer = await Answer.findOne({ _id: req.params.id });
     res.status(201).json(answer);
   } catch (error) {
     next(error);
@@ -21,9 +21,10 @@ router.post(
   verifyToken,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const post = await Post.findOne({ id: req.body.post });
+      const post = await Post.findOne({ _id: req.body.post });
       if (post) {
         const payloads = {
+          author: req.user.id,
           ...req.body,
         };
         const answer = await Answer.create(payloads);
@@ -43,7 +44,7 @@ router.put(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const answer = await Answer.findOneAndUpdate(
-        { id: req.params.post },
+        { _id: req.params.post },
         { ...req.body }
       );
       res.status(201).json(answer);
@@ -58,8 +59,13 @@ router.delete(
   verifyToken,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await Answer.findOneAndDelete({ id: req.params.post });
-      res.status(201).json("deleted");
+      await Answer.findOneAndDelete({ _id: req.params.post }, (err: Error) => {
+        if (err) {
+          res.status(400).json(err);
+        }
+
+        res.status(201).json("deleted");
+      });
     } catch (error) {
       next(error);
     }

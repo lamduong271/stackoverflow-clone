@@ -7,6 +7,8 @@ import { connectDB } from "./config/mongoConfig";
 import userRouter from "./routes/user.router";
 import portRouter from "./routes/post.router";
 import commentRouter from "./routes/comment.router";
+import voteRouter from "./routes/vote.router";
+import answerRouter from "./routes/answer.router";
 
 const app = express();
 app.use(json());
@@ -22,6 +24,9 @@ app.use(function (req, res, next) {
 app.use("/auth", userRouter);
 app.use("/question", portRouter);
 app.use("/comment", commentRouter);
+app.use("/vote", voteRouter);
+app.use("/answer", answerRouter);
+
 app.listen(3000, () => {
   console.log("server is listening on port 3000");
 });

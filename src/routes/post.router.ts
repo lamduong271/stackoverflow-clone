@@ -16,7 +16,7 @@ router.get("/", async (req, res, next) => {
 
 router.get("/:id", async (req, res, next) => {
   try {
-    const post = await Post.findOne({ id: req.params.id }).populate(
+    const post = await Post.findOne({ _id: req.params.id }).populate(
       "author",
       "comments"
     );
@@ -50,7 +50,7 @@ router.put("/:id", verifyToken, async (req, res, next) => {
   };
   try {
     const updatedPost = await Post.findOneAndUpdate(
-      { id: req.params.id },
+      { _id: req.params.id },
       payloads
     );
     res.status(201).json(updatedPost);
@@ -61,7 +61,7 @@ router.put("/:id", verifyToken, async (req, res, next) => {
 
 router.delete("/:id", verifyToken, async (req, res, next) => {
   try {
-    await Post.findOneAndDelete({ id: req.params.id });
+    await Post.findOneAndDelete({ _id: req.params.id });
     res.status(201).json("deleted");
   } catch (error) {
     next(error);
