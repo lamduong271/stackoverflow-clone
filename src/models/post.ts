@@ -14,7 +14,7 @@ const Post = mongoose.model(
     title: String,
     textBody: String,
     created: { type: Date, default: Date.now },
-    votes: [Vote],
+    votes: [Vote.schema],
     image: String,
     comments: [Comment.schema],
     answers: [Answer.schema],

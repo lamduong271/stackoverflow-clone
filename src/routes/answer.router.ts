@@ -26,7 +26,9 @@ router.post(
         const payloads = {
           ...req.body,
         };
-        const answer = await Comment.create(payloads);
+        const answer = await Answer.create(payloads);
+        post.answers = [...post.answers, answer];
+        post.save();
         res.status(201).json(answer);
       }
     } catch (error) {

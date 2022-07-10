@@ -14,7 +14,7 @@ const Answer = mongoose.model(
     created: { type: Date, default: Date.now },
     textBody: { type: String, required: true },
     score: { type: Number, default: 0 },
-    votes: [Vote],
+    votes: [Vote.schema],
     comments: [Comment.schema],
     post: {
       type: Schema.Types.ObjectId,
