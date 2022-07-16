@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get("/", async (req, res, next) => {
   try {
-    const posts = await Post.find({}).populate("author");
+    const posts = await Post.find().populate("author", "comments.id").exec();
     res.status(201).json(posts);
   } catch (error) {
     next(error);
@@ -16,10 +16,9 @@ router.get("/", async (req, res, next) => {
 
 router.get("/:id", async (req, res, next) => {
   try {
-    const post = await Post.findOne({ _id: req.params.id }).populate(
-      "author",
-      "comments"
-    );
+    const post = await Post.findOne({ _id: req.params.id })
+      .populate("author", "comments")
+      .exec();
     res.status(201).json(post);
   } catch (error) {
     next(error);

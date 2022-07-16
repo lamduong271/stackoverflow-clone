@@ -40,10 +40,7 @@ router.post("/login", async (req: Request, res: Response) => {
             id: existUser._id,
             email: existUser.email,
           },
-          process.env.JWT_SECRET as string,
-          {
-            expiresIn: 86400,
-          }
+          process.env.JWT_SECRET as string
         );
         existUser.token = token;
         res.send({ success: true, token });

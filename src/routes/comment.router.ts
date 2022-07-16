@@ -14,21 +14,27 @@ router.post(
     try {
       const post = await Post.findOne({ _id: req.body.post });
       const answer = await Answer.findOne({ _id: req.body.answer });
-      const payloads = {
-        ...req.body,
-        author: req.user.id,
-      };
       if (post) {
+        const payloads = {
+          ...req.body,
+          author: req.user.id,
+          post: post._id,
+        };
         const comment = await Comment.create(payloads);
         post.comments = [...post.comments, comment];
         await post.save();
         res.status(201).json(comment);
-      }
-      if (answer) {
+      } else if (answer) {
+        const payloads = {
+          ...req.body,
+          author: req.user.id,
+          answer: answer._id,
+        };
         const comment = await Comment.create(payloads);
         answer.comments = [...answer.comments, comment];
-        await answer.save();
         res.status(201).json(comment);
+      } else {
+        res.status(401).json("not found answer or post id");
       }
     } catch (error) {
       next(error);

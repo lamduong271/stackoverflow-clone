@@ -9,7 +9,9 @@ const router = express.Router();
 
 router.get("/:id", async (req, res, next) => {
   try {
-    const answer = await Answer.findOne({ _id: req.params.id });
+    const answer = await Answer.findOne({ _id: req.params.id }).populate(
+      "post"
+    );
     res.status(201).json(answer);
   } catch (error) {
     next(error);
@@ -25,6 +27,7 @@ router.post(
       if (post) {
         const payloads = {
           author: req.user.id,
+          post: post._id,
           ...req.body,
         };
         const answer = await Answer.create(payloads);
@@ -32,6 +35,7 @@ router.post(
         post.save();
         res.status(201).json(answer);
       }
+      res.status(401).json("post not found");
     } catch (error) {
       next(error);
     }
@@ -44,7 +48,7 @@ router.put(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const answer = await Answer.findOneAndUpdate(
-        { _id: req.params.post },
+        { _id: req.params.id },
         { ...req.body }
       );
       res.status(201).json(answer);
