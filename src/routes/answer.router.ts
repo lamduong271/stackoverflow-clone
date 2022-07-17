@@ -69,9 +69,9 @@ router.delete(
         const filteredAns = post.answers.filter(
           // @ts-ignore
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          (item) => item._id !== comment._id
+          (item) => item._id.toString() !== comment._id.toString()
         );
-        post.answers = [...filteredAns];
+        post.answers = filteredAns;
         await answer.delete();
         await post.save();
         res.status(201).json("deleted");

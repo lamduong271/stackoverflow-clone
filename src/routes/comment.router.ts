@@ -84,12 +84,14 @@ router.delete(
         const filteredCmts = post.comments.filter(
           // @ts-ignore
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          (item) => item._id !== comment._id
+          (item) => item._id.toString() !== comment._id.toString()
         );
         console.log("post ", post);
         console.log("post.comments ", post.comments);
         console.log("filteredCmts ", filteredCmts);
-        post.comments = [...filteredCmts];
+        post.comments = filteredCmts;
+        await post.save();
+        await comment.delete();
         res.status(201).json("deleted");
       }
       res.status(401).json("post or comment not found");
