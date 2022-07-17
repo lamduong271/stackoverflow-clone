@@ -6,7 +6,6 @@ import Vote from "./vote";
 const Post = mongoose.model(
   "Post",
   new mongoose.Schema({
-    _id: Schema.Types.ObjectId,
     author: {
       type: Schema.Types.ObjectId,
       ref: "User",

@@ -66,10 +66,12 @@ router.delete(
       const answer = await Answer.findOne({ _id: req.params.post });
       const post = await Post.findOne({ id: req.params.postId });
       if (post && answer) {
-        const updatedParam = post.answers.filter(
-          (ans) => ans._id !== answer._id
+        const filteredAns = post.answers.filter(
+          // @ts-ignore
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          (item) => item._id !== comment._id
         );
-        post.answers = [...updatedParam];
+        post.answers = [...filteredAns];
         await answer.delete();
         await post.save();
         res.status(201).json("deleted");

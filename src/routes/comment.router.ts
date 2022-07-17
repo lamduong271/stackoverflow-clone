@@ -74,22 +74,25 @@ router.put(
 );
 
 router.delete(
-  ":postId/:id",
+  "/:postId/:id",
   verifyToken,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const comment = await Comment.findOne({ _id: req.params.id });
-      const post = await Post.findOne({ id: req.params.postId });
+      const post = await Post.findOne({ _id: req.params.postId });
       if (post && comment) {
-        const updatedParam = post?.comments.filter(
-          (cmt) => cmt._id !== comment?._id
+        const filteredCmts = post.comments.filter(
+          // @ts-ignore
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          (item) => item._id !== comment._id
         );
-        post.comments = [...updatedParam];
-        await comment.delete();
-        await post.save();
+        console.log("post ", post);
+        console.log("post.comments ", post.comments);
+        console.log("filteredCmts ", filteredCmts);
+        post.comments = [...filteredCmts];
         res.status(201).json("deleted");
       }
-      res.status(401).json("post not found");
+      res.status(401).json("post or comment not found");
     } catch (error) {
       next(error);
     }
