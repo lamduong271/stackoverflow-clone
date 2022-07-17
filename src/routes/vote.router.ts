@@ -15,7 +15,9 @@ router.post(
     try {
       const answer = await Answer.findOne({ _id: req.params.answerId });
       if (answer) {
-        const existingVote = answer.votes.filter((vote) => vote.user === id);
+        const existingVote = answer.votes.filter(
+          (vote) => vote.user.toString() === id.toString()
+        );
         console.log("answer.votes ", answer.votes);
         if (existingVote.length === 0) {
           console.log("existingVote ", existingVote);
@@ -28,35 +30,8 @@ router.post(
           answer.votes = [...answer.votes, newVote];
           (await answer.save()).populate("votes");
           res.status(201).json(answer);
-        }
-      }
-      res.status(401).json("not found");
-    } catch (error) {
-      next(error);
-    }
-  }
-);
-
-router.post(
-  "/question/voteup/:questionId/",
-  verifyToken,
-  async (req: Request, res: Response, next: NextFunction) => {
-    const { id } = req.user;
-    try {
-      const post = await Post.findOne({ _id: req.params.questionId });
-      if (post) {
-        const existingVote = post.votes.filter((user) => user === id);
-        if (!existingVote) {
-          const newVotePayloads = {
-            user: id,
-            post: post.id,
-            type: "UP",
-          };
-          const newVote = await Vote.create(newVotePayloads);
-          post.votes = [...post.votes, newVote];
-          post.save();
-          (await post.save()).populate("votes");
-          res.status(201).json(post);
+        } else {
+          res.status(400).json("already voted");
         }
       }
       res.status(401).json("not found");
@@ -69,31 +44,64 @@ router.post(
 router.post(
   "/answer/votedown/:answerId/",
   verifyToken,
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req, res, next) => {
+    const { id } = req.user;
     try {
-      const { id } = req.user;
       const answer = await Answer.findOne({ _id: req.params.answerId });
       if (answer) {
-        const existingVote = answer.votes.filter((user) => user === id);
-        if (!existingVote) {
+        const existingVote = answer.votes.filter(
+          (vote) => vote.user.toString() === id.toString()
+        );
+        if (existingVote.length === 0) {
           const newVotePayloads = {
             user: id,
             answer: answer.id,
-            post: null,
             type: "DOWN",
           };
           const newVote = await Vote.create(newVotePayloads);
           answer.votes = [...answer.votes, newVote];
           (await answer.save()).populate("votes");
           res.status(201).json(answer);
+        } else {
+          res.status(400).json("already voted");
         }
+      } else {
+        res.status(401).json("not found");
       }
-      res.status(401).json("not found");
     } catch (error) {
       next(error);
     }
   }
 );
+
+// router.post(
+//   "/question/voteup/:questionId/",
+//   verifyToken,
+//   async (req: Request, res: Response, next: NextFunction) => {
+//     const { id } = req.user;
+//     try {
+//       const post = await Post.findOne({ _id: req.params.questionId });
+//       if (post) {
+//         const existingVote = post.votes.filter((user) => user === id);
+//         if (!existingVote) {
+//           const newVotePayloads = {
+//             user: id,
+//             post: post.id,
+//             type: "UP",
+//           };
+//           const newVote = await Vote.create(newVotePayloads);
+//           post.votes = [...post.votes, newVote];
+//           (await post.save()).populate("votes");
+//           res.status(201).json(post);
+//         } else {
+//         }
+//       }
+//       res.status(401).json("not found");
+//     } catch (error) {
+//       next(error);
+//     }
+//   }
+// );
 
 router.post(
   "/question/votedown/:questionId/",

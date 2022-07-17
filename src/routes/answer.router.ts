@@ -9,9 +9,7 @@ const router = express.Router();
 
 router.get("/:id", async (req, res, next) => {
   try {
-    const answer = await Answer.findOne({ _id: req.params.id }).populate(
-      "post"
-    );
+    const answer = await Answer.findOne({ _id: req.params.id });
     res.status(201).json(answer);
   } catch (error) {
     next(error);
