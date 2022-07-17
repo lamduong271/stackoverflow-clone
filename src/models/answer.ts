@@ -6,6 +6,7 @@ const Schema = mongoose.Schema;
 const Answer = mongoose.model(
   "Answer",
   new Schema({
+    _id: Schema.Types.ObjectId,
     author: {
       type: Schema.Types.ObjectId,
       ref: "User",

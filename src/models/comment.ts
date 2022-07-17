@@ -1,9 +1,10 @@
-import mongoose from "mongoose";
+import mongoose, { isObjectIdOrHexString } from "mongoose";
 const Schema = mongoose.Schema;
 
 const Comment = mongoose.model(
   "Comment",
   new Schema({
+    _id: Schema.Types.ObjectId,
     author: {
       type: Schema.Types.ObjectId,
       ref: "User",

@@ -59,17 +59,22 @@ router.put(
 );
 
 router.delete(
-  "/:id",
+  ":postId/:id",
   verifyToken,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await Answer.findOneAndDelete({ _id: req.params.post }, (err: Error) => {
-        if (err) {
-          res.status(400).json(err);
-        }
-
+      const answer = await Answer.findOne({ _id: req.params.post });
+      const post = await Post.findOne({ id: req.params.postId });
+      if (post && answer) {
+        const updatedParam = post.answers.filter(
+          (ans) => ans._id !== answer._id
+        );
+        post.answers = [...updatedParam];
+        await answer.delete();
+        await post.save();
         res.status(201).json("deleted");
-      });
+      }
+      res.status(401).json("post not found");
     } catch (error) {
       next(error);
     }

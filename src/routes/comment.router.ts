@@ -7,6 +7,21 @@ import Answer from "../models/answer";
 
 const router = express.Router();
 
+router.get(
+  "/:postId",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const commentsByPostId = await Comment.find({ post: req.params.postId });
+      if (commentsByPostId.length > 0) {
+        res.status(201).json(commentsByPostId);
+      }
+      res.status(401).json("not found");
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 router.post(
   "/",
   verifyToken,
@@ -43,12 +58,12 @@ router.post(
 );
 
 router.put(
-  "/:id",
+  "/:postId/:id",
   verifyToken,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const comment = await Comment.findOneAndUpdate(
-        { _id: req.params.post },
+        { _id: req.params.id },
         { ...req.body }
       );
       res.status(201).json(comment);
@@ -59,12 +74,22 @@ router.put(
 );
 
 router.delete(
-  "/:id",
+  ":postId/:id",
   verifyToken,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await Comment.findOneAndDelete({ _id: req.params.post });
-      res.status(201).json("deleted");
+      const comment = await Comment.findOne({ _id: req.params.id });
+      const post = await Post.findOne({ id: req.params.postId });
+      if (post && comment) {
+        const updatedParam = post?.comments.filter(
+          (cmt) => cmt._id !== comment?._id
+        );
+        post.comments = [...updatedParam];
+        await comment.delete();
+        await post.save();
+        res.status(201).json("deleted");
+      }
+      res.status(401).json("post not found");
     } catch (error) {
       next(error);
     }
