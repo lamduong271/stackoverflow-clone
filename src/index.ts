@@ -27,6 +27,7 @@ app.use("/comment", commentRouter);
 app.use("/vote", voteRouter);
 app.use("/answer", answerRouter);
 
-app.listen(3000, () => {
-  console.log("server is listening on port 3000");
-});
+app.set("port", process.env.PORT || 3000); // Process.env.PORT change automatically the port IF 3000 port is being used.
+app.listen(app.get("port"), () =>
+  console.log(`Node server listening on port ${app.get("port")}!`)
+);
