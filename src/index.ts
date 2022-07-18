@@ -1,4 +1,4 @@
-require("dotenv").config({ path: "./config.env" });
+require("dotenv").config({ path: "./.env" });
 import express from "express";
 import { json } from "body-parser";
 import cors from "cors";
