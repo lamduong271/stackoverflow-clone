@@ -11,8 +11,14 @@ const Post = mongoose.model(
       ref: "User",
       required: true,
     },
-    title: String,
-    textBody: String,
+    title: {
+      type: String,
+      required: true,
+    },
+    textBody: {
+      type: String,
+      required: true,
+    },
     created: { type: Date, default: Date.now },
     votes: [Vote.schema],
     image: String,
