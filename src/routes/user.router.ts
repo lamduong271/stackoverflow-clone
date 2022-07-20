@@ -3,6 +3,7 @@ import User from "../models/user";
 import bcrypt from "bcrypt";
 import { sign } from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
+import verifyToken from "../middleware/auth";
 
 const router = express.Router();
 
@@ -54,7 +55,7 @@ router.post("/auth/login", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/:id", async (req: Request, res: Response) => {
+router.post("/:id", verifyToken, async (req: Request, res: Response) => {
   try {
     const existUser = await User.findOne({ email: req.params.id });
 
