@@ -43,7 +43,7 @@ router.post("/login", async (req: Request, res: Response) => {
           process.env.JWT_SECRET as string
         );
         existUser.token = token;
-        res.send({ success: true, token });
+        res.send({ success: true, token, user: existUser });
       } else {
         res.status(401).send({ message: "not found" });
       }
