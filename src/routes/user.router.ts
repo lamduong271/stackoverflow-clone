@@ -6,7 +6,7 @@ import { Request, Response, NextFunction } from "express";
 
 const router = express.Router();
 
-router.post("/register", async (req: Request, res: Response) => {
+router.post("/auth/register", async (req: Request, res: Response) => {
   try {
     const user = await User.findOne({ email: req.body.email });
     const saltRounds = 10;
@@ -25,7 +25,7 @@ router.post("/register", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/login", async (req: Request, res: Response) => {
+router.post("/auth/login", async (req: Request, res: Response) => {
   try {
     const existUser = await User.findOne({ email: req.body.email });
 
@@ -47,6 +47,19 @@ router.post("/login", async (req: Request, res: Response) => {
       } else {
         res.status(401).send({ message: "not found" });
       }
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Internal Server error Occured");
+  }
+});
+
+router.post("/:id", async (req: Request, res: Response) => {
+  try {
+    const existUser = await User.findOne({ email: req.params.id });
+
+    if (existUser) {
+      res.status(401).send({ name: existUser.name, email: existUser.email });
     }
   } catch (error) {
     console.log(error);

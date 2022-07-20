@@ -21,7 +21,7 @@ app.use(function (req, res, next) {
   );
   next();
 });
-app.use("/auth", userRouter);
+app.use("/user", userRouter);
 app.use("/question", portRouter);
 app.use("/comment", commentRouter);
 app.use("/vote", voteRouter);

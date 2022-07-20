@@ -32,7 +32,7 @@ router.post(
       if (post) {
         const payloads = {
           ...req.body,
-          author: req.user.id,
+          author: req.user._id,
           post: post._id,
         };
         const comment = await Comment.create(payloads);
