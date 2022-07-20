@@ -57,7 +57,7 @@ router.post("/auth/login", async (req: Request, res: Response) => {
 
 router.get("/:id", verifyToken, async (req: Request, res: Response) => {
   try {
-    const existUser = await User.findOne({ email: req.params.id });
+    const existUser = await User.findOne({ _id: req.params.id });
 
     if (existUser) {
       res.status(200).send({ name: existUser.name, email: existUser.email });
