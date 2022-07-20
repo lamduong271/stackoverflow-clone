@@ -60,8 +60,9 @@ router.get("/:id", verifyToken, async (req: Request, res: Response) => {
     const existUser = await User.findOne({ email: req.params.id });
 
     if (existUser) {
-      res.status(401).send({ name: existUser.name, email: existUser.email });
+      res.status(200).send({ name: existUser.name, email: existUser.email });
     }
+    res.status(401).send({ status: false, message: "not found user" });
   } catch (error) {
     console.log(error);
     res.status(500).send("Internal Server error Occured");
