@@ -47,6 +47,7 @@ router.post(
         };
         const comment = await Comment.create(payloads);
         answer.comments = [...answer.comments, comment];
+        await answer.save();
         res.status(201).json(comment);
       } else {
         res.status(401).json("not found answer or post id");
