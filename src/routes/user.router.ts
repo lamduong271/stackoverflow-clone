@@ -55,7 +55,7 @@ router.post("/auth/login", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/:id", verifyToken, async (req: Request, res: Response) => {
+router.get("/:id", async (req: Request, res: Response) => {
   try {
     const existUser = await User.findOne({ _id: req.params.id });
 
