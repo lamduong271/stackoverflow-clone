@@ -12,7 +12,7 @@ router.post("/auth/register", async (req: Request, res: Response) => {
     const user = await User.findOne({ email: req.body.email });
     const saltRounds = 10;
     if (user) {
-      res.send("Email already in use.");
+      res.status(400).send({ error: "Email already in use." });
     } else {
       const hashedPwd = await bcrypt.hash(req.body.password, saltRounds);
       await User.create({
@@ -46,7 +46,7 @@ router.post("/auth/login", async (req: Request, res: Response) => {
         existUser.token = token;
         res.send({ success: true, token, user: existUser });
       } else {
-        res.status(401).send({ message: "not found" });
+        res.status(401).send({ error: "not found" });
       }
     }
   } catch (error) {
